@@ -1,0 +1,20 @@
+{
+    "name": "legionth/line-react",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Niels Theen",
+            "email": "niels.theen@googlemail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Legionth\\React\\LineReader\\": "src/" }
+    },
+    "require": {
+        "php": ">=5.3",
+        "react/stream": "^0.4 || ^0.3"
+    },
+    "require-dev": {
+        "react/event-loop": "^0.4 || ^0.3"
+    }
+}
