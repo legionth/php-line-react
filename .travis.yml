@@ -1,16 +1,28 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
   - 7
 
+# lock distro so new future defaults will not break the build
+dist: trusty
+
+# also test lowest dependencies on PHP 7
+matrix:
+  include:
+    - php: 5.3
+      dist: precise
+    - php: 7.0
+      env:
+        - DEPENDENCIES=lowest
+
 sudo: false
 
 install:
   - composer install --no-interaction
-
+  - if [ "$DEPENDENCIES" = "lowest" ]; then composer update --prefer-lowest -n; fi
+  
 script:
-  - phpunit --coverage-text
+  - ./vendor/bin/phpunit --coverage-text
