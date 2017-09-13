@@ -7,7 +7,7 @@ class LineReaderTest extends TestCase
     public function setUp()
     {
         $this->lineReader = new LineReader();
-        
+
         $this->input = new ReadableStream();
         $this->input->pipe($this->lineReader);
     }
@@ -23,7 +23,7 @@ class LineReaderTest extends TestCase
     public function testSeperatedData()
     {
         $this->lineReader->on('data', $this->expectCallableOnceWith('helloworld' . PHP_EOL));
-        
+
         $this->input->emit('data', array(
             'hello'
         ));
@@ -35,7 +35,7 @@ class LineReaderTest extends TestCase
     public function testWithLineBreak()
     {
         $this->lineReader->on('data', $this->expectCallableOnceWith('hello' . PHP_EOL));
-        
+
         $this->input->emit('data', array(
             'hello' . PHP_EOL . 'world'
         ));
@@ -48,7 +48,7 @@ class LineReaderTest extends TestCase
             'world' . PHP_EOL
         );
         $this->lineReader->on('data', $this->expectCallableConsecutive(2, $expectedValues));
-        
+
         $this->input->emit('data', array(
             'hello' . PHP_EOL . 'world' . PHP_EOL
         ));
@@ -69,10 +69,10 @@ class LineReaderTest extends TestCase
 
     public function testPipeStream()
     {
-        $dest = $this->getMock('React\Stream\WritableStreamInterface');
-        
+        $dest = $this->getMockBuilder('React\Stream\WritableStreamInterface')->getMock();
+
         $ret = $this->lineReader->pipe($dest);
-        
+
         $this->assertSame($dest, $ret);
     }
 
@@ -92,7 +92,7 @@ class LineReaderTest extends TestCase
     {
         $lineReader = new LineReader();
         $actual = $lineReader->isReadable();
-        
+
         $this->assertTrue($actual);
     }
 
@@ -100,7 +100,7 @@ class LineReaderTest extends TestCase
     {
         $lineReader = new LineReader();
         $actual = $lineReader->isWritable();
-        
+
         $this->assertTrue($actual);
     }
 
@@ -114,13 +114,13 @@ class LineReaderTest extends TestCase
     private function expectCallableConsecutive($numberOfCalls, array $with)
     {
         $mock = $this->createCallableMock();
-        
+
         for ($i = 0; $i < $numberOfCalls; $i ++) {
             $mock->expects($this->at($i))
                 ->method('__invoke')
                 ->with($this->equalTo($with[$i]));
         }
-        
+
         return $mock;
     }
 }
