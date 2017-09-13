@@ -111,6 +111,24 @@ class LineReaderTest extends TestCase
         $lineReader->close();
     }
 
+    public function testDefinedEolWillSeperateStrings()
+    {
+        $lineReader = new LineReader('you');
+        $input = new ReadableStream();
+        $input->pipe($lineReader);
+
+        $expectedValues = array(
+            'hello you',
+            ' world you'
+        );
+
+        $lineReader->on('data', $this->expectCallableConsecutive(2, $expectedValues));
+
+        $input->emit('data', array(
+            'hello you world you'
+        ));
+    }
+
     private function expectCallableConsecutive($numberOfCalls, array $with)
     {
         $mock = $this->createCallableMock();

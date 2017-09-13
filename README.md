@@ -11,7 +11,11 @@ Line reader stream to forward complete lines to a stream.
 
 ### LineReader
 
-The center of this project is the `LineReader` class. This class checks incoming data for an new line delimiter, if the delimeter has been found in the current data chunk the data will be exposed on the stream. When the new line delimeter isn't found the data chunk, it will be buffered until a delimiter occures. The `LineReader` is a duplex stream, so a readable and writable stream at the same time. 
+The center of this project is the `LineReader` class.
+This class checks incoming data for an new line delimiter, if the delimeter has been found in the current data chunk the data will be exposed on the stream.
+When the new line delimeter isn't found the data chunk,
+it will be buffered until a delimiter occures.
+The `LineReader` is a duplex stream, so a readable and writable stream at the same time. 
 
 Checkout `examples` how you can use this project.
 
@@ -19,7 +23,12 @@ Checkout `examples` how you can use this project.
 $ cat words.txt | php examples/readLine.php
 ```
 
-This example makes clear what example this project can be used for. Every line with a new line delimiter will put into the readable stream. Every other line without a new line delimiter will be buffered until another occures.
+This example makes clear what example this project can be used for.
+Every line with a new line delimiter will put into the readable stream.
+Every other line without a new line delimiter will be buffered until another occures.
+
+The first parameter of the `LineReader` is the custom delimiter.
+The default value of this delimiter is `PHP_EOL`.
 
 ## Install
 

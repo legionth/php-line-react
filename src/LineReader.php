@@ -8,30 +8,43 @@ use React\Stream\WritableStreamInterface;
 use React\Stream\Util;
 
 /**
- * Read the stream line wise. This class is a duplex stream so a writeable and readable 
- * stream at the same time 
+ * Read the stream line wise. This class is a duplex stream so a writeable and readable
+ * stream at the same time
  */
 class LineReader extends EventEmitter implements ReadableStreamInterface, WritableStreamInterface
 {
     private $closed = false;
     private $buffer = '';
-    
+    private $eol;
+
     /**
-     * Reads the incomg data until the new line delimiter occures, 
-     * if there is no delimiter in the chunk the data will be buffered until 
+     * @param string $eol - delimiter that defines the end of line
+     */
+    public function __construct($eol = PHP_EOL)
+    {
+        $this->eol = $eol;
+    }
+
+    /**
+     * Reads the incomg data until the new line delimiter occures,
+     * if there is no delimiter in the chunk the data will be buffered until
      * the next data chunk comes in
      *
      * @param string $chunk - string entered by the input stream
      */
     public function write($chunk)
     {
-        for ($i = 0; $i < strlen($chunk); $i++) {
-            $this->buffer .= $chunk[$i];
-        
-            if ($chunk[$i] == PHP_EOL) {
-                $this->emit('data', array($this->buffer));
-                $this->buffer = '';
+        $this->buffer .= $chunk;
+        while ($this->buffer !== "") {
+            $position = strpos($this->buffer, $this->eol);
+
+            if ($position === false) {
+                return;
             }
+
+            $data = substr($this->buffer, 0, $position + strlen($this->eol));
+            $this->emit('data', array($data));
+            $this->buffer = substr($this->buffer, $position + strlen($this->eol));
         }
     }
 
@@ -74,7 +87,7 @@ class LineReader extends EventEmitter implements ReadableStreamInterface, Writab
         $this->emit('close');
         $this->removeAllListeners();
     }
-    
+
     public function isWritable()
     {
         return !$this->closed;
